@@ -40,3 +40,7 @@ Applicativo web em React + vite, puro frontend sem backend
 (- Regras de comunicação	Impede que plantas "incompatíveis" conversem: Dicionário com compatibilidades (ex: "Orquídea odeia Samambaia"))
 - Interface do chat (lib ?, js + tailwind?)
 (- Vozes das plantas - Web Speech API – speechSynthesis / ou modelo de IA pra poder mudar as vozes) nice to have
+
+## Como rodar:
+- `npm install`
+- `npm dev`
