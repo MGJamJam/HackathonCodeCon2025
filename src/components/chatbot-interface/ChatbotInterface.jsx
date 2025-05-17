@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { randomPhrase } from "../../utils/randomPhrase";
 import speak from "../../utils/textToSpeech";
 import getRandomPlantEmoji from "../../utils/getPlantEmoji";
+import { askAssistant } from "../../utils/openAiApi";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([
@@ -17,12 +18,55 @@ export default function Chatbot() {
     secondPlant: rightImageResponse?.input?.images?.[0] || "🌻",
   };
 
+  const OPENAI_API_KEY = import.meta.env.VITE_OPENAPI_KEY;
+
+  async function callOpenAi() {
+    const ASSISTANT_ID = "asst_FB9K589h5aXzuS6XjbOA1vCi";
+
+    const threadRes = await fetch("https://api.openai.com/v1/threads", {
+      method: "POST",
+      headers: {
+        assistant_id: ASSISTANT_ID,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
+      },
+    });
+
+    const threadData = await threadRes.json();
+
+    await sendPrompt(threadData.id);
+  }
+
+  async function sendPrompt(threadId) {
+    if (!threadId) {
+      alert("Crie a thread primeiro clicando em 'Traduza!!!'");
+      return;
+    }
+
+    const prompt = `
+    NomePlantaRemetente: Planta A
+    NomePlantaDestinatário: Planta B
+    TomDeHumorRemetente: Fofoqueira
+    Recebida: "${messages[messages.length - 1].text}"
+  `;
+
+    const resposta = await askAssistant(prompt, threadId, OPENAI_API_KEY);
+
+    const botMessage = {
+      sender: "bot",
+      text: resposta,
+    };
+
+    setMessages((prev) => [...prev, botMessage]);
+  }
+
   useEffect(() => {
     let count = 0;
     let sender = "user";
 
     const interval = setInterval(() => {
-      if (count >= 30) {
+      if (count >= 10) {
         clearInterval(interval);
         return;
       }
@@ -79,6 +123,7 @@ export default function Chatbot() {
           </div>
         ))}
       </div>
+      <button onClick={() => callOpenAi()}>Traduza!!!</button>
     </div>
   );
 }
