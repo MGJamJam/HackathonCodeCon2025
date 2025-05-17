@@ -1,5 +1,5 @@
 import "./App.css";
-import { ImageRecognition } from "./ImageRecongnition.jsx";
+import { ImageRecognition } from "./components/ImageRecongnition.jsx";
 
 function App() {
   return (
