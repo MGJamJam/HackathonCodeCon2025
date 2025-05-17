@@ -1,13 +1,9 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { ImageRecognition } from "./components/ImageRecongnition.jsx";
 
 import Chatbot from './components/chatbot-interface/ChatbotInterface.jsx';
 
 export default function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <header>
@@ -15,6 +11,8 @@ export default function App() {
           Plant Talk
         </h1>
       </header>
+
+      <ImageRecognition />
 
       <Chatbot />
     </>
