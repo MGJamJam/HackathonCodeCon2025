@@ -20,7 +20,7 @@ export function ImageRecognition() {
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
 
-  const [isPlant, setIsPlant] = useState(null);
+  const [isPlant, setIsPlant] = useState(true);
 
   const navigate = useNavigate();
 
@@ -116,6 +116,7 @@ export function ImageRecognition() {
           rightResponse.result.is_plant.binary === false
         ) {
           setIsPlant(false);
+          setLoading(false);
           return;
         }
 
@@ -162,8 +163,17 @@ export function ImageRecognition() {
       <button
         className="mt-4 px-6 py-3 bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
         onClick={takePhoto}
+        hidden={!isPlant}
       >
         Iniciar plantoversa
+      </button>
+
+      <button
+        className="mt-4 px-6 py-3 bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
+        onClick={() => window.location.reload()}
+        hidden={isPlant}
+      >
+        Try again
       </button>
 
       {debug && (
