@@ -1,37 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { randomPhrase } from "../../utils/randomPhrase";
+import speak from "../../utils/textToSpeech";
+import getRandomPlantEmoji from "../../utils/getPlantEmoji";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Olá! Como posso te ajudar hoje?" },
+    { sender: "bot", text: randomPhrase() },
   ]);
-  const [input, setInput] = useState("");
 
   const location = useLocation();
   const { leftImageResponse, rightImageResponse } = location.state || {};
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-
-    const userMessage = { sender: "user", text: input };
-    setMessages([...messages, userMessage]);
-
-    setTimeout(() => {
-      const botMessage = { sender: "bot", text: "Entendi! Me fale mais." };
-      setMessages((prev) => [...prev, botMessage]);
-    }, 1000);
-
-    setInput("");
-  };
-
   const avatar = {
-    firstPlant: leftImageResponse.input.images[0] || "🪴",
-    secondPlant: rightImageResponse.input.images[0] || "🌻",
-    // URL: ex. "https://example.com/avatar.png"
+    firstPlant: leftImageResponse?.input?.images?.[0] || "🪴",
+    secondPlant: rightImageResponse?.input?.images?.[0] || "🌻",
   };
+
+  useEffect(() => {
+    let count = 0;
+    let sender = "user";
+
+    const interval = setInterval(() => {
+      if (count >= 30) {
+        clearInterval(interval);
+        return;
+      }
+
+      const newMessage = {
+        sender,
+        text: randomPhrase(),
+      };
+
+      setMessages((prev) => [...prev, newMessage]);
+      sender = sender === "user" ? "bot" : "user";
+      count++;
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fala apenas a última mensagem, quando ela muda
+  useEffect(() => {
+    if (messages.length > 1) {
+      const last = messages[messages.length - 1];
+      speak(last.text);
+    }
+  }, [messages]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem]">
+    <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem] min-w-100 max-h-150">
       <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2">
         {messages.map((msg, idx) => (
           <div
@@ -50,8 +68,9 @@ export default function Chatbot() {
                   : "bg-green-300"
               }`}
             >
-              {msg.text}
+              {msg.text} {getRandomPlantEmoji()}
             </div>
+
             {msg.sender === "user" && (
               <div className="w-8 h-8 ml-2 text-2xl">
                 <img src={avatar.secondPlant} />
@@ -59,23 +78,6 @@ export default function Chatbot() {
             )}
           </div>
         ))}
-      </div>
-
-      <div className="flex">
-        <input
-          className="flex-1 p-2 border rounded-l-lg focus:outline-none"
-          type="text"
-          placeholder="Digite sua mensagem..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
-        <button
-          className="bg-blue-500 text-white px-4 rounded-r-lg hover:bg-blue-600"
-          onClick={handleSend}
-        >
-          Enviar
-        </button>
       </div>
     </div>
   );
