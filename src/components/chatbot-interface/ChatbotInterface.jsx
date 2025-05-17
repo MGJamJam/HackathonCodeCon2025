@@ -12,7 +12,6 @@ export default function Chatbot() {
     const userMessage = { sender: 'user', text: input };
     setMessages([...messages, userMessage]);
 
-    // Simulação de resposta do bot
     setTimeout(() => {
       const botMessage = { sender: 'bot', text: 'Entendi! Me fale mais.' };
       setMessages(prev => [...prev, botMessage]);
@@ -21,21 +20,35 @@ export default function Chatbot() {
     setInput('');
   };
 
+  const avatar = {
+    bot: '🪴',
+    user: '🌻'
+    // URL: ex. "https://example.com/avatar.png"
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem] ">
-      <div className="flex-1 overflow-auto mb-4">
-        <div className="space-y-2">
-          {messages.map((msg, idx) => (
+    <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem]">
+      <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2">
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`flex items-start ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            {msg.sender === 'bot' && (
+              <div className="w-8 h-8 mr-2 text-2xl">{avatar.bot}</div>
+            )}
             <div
-              key={idx}
               className={`p-3 rounded-lg max-w-md ${
-                msg.sender === 'bot' ? 'bg-green-500 self-start' : 'bg-green-300 self-end'
+                msg.sender === 'bot' ? 'bg-green-500 self-start' : 'bg-green-300'
               }`}
             >
               {msg.text}
             </div>
-          ))}
-        </div>
+            {msg.sender === 'user' && (
+              <div className="w-8 h-8 ml-2 text-2xl">{avatar.user}</div>
+            )}
+          </div>
+        ))}
       </div>
 
       <div className="flex">
@@ -57,3 +70,4 @@ export default function Chatbot() {
     </div>
   );
 }
+
