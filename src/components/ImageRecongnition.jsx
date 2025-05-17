@@ -3,12 +3,22 @@ import identifyPlant from "../utils/plantApi.js";
 import { useNavigate } from "react-router-dom";
 import { FaceError } from "./face-error/face-error.jsx";
 
+const funnyLoadingMessages = [
+  "🌿 Conversando com as raízes...",
+  "☀️ Carregando clorofila extra...",
+  "🍃 Acalmando as folhas agitadas...",
+  "🌵 Sincronizando espinhos...",
+  "🪴 Regando bits...",
+];
+
 export function ImageRecognition() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
   const [leftImage, setLeftImage] = useState(null);
   const [rightImage, setRightImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   const [isPlant, setIsPlant] = useState(null);
 
@@ -47,7 +57,6 @@ export function ImageRecognition() {
     const leftCanvas = document.createElement("canvas");
     leftCanvas.width = halfWidth;
     leftCanvas.height = videoHeight;
-    let leftImageResponse = null;
     const leftCtx = leftCanvas.getContext("2d");
     leftCtx.drawImage(
       canvas,
@@ -62,10 +71,6 @@ export function ImageRecognition() {
     );
     const leftImageDataUrl = leftCanvas.toDataURL("image/jpeg");
     setLeftImage(leftImageDataUrl); // show it on screen
-    await identifyPlant({ imageBase64: leftImageDataUrl }).then((r) => {
-      console.log("Left plant:", r);
-      leftImageResponse = r;
-    });
 
     // RIGHT IMAGE
     const rightCanvas = document.createElement("canvas");
@@ -84,27 +89,58 @@ export function ImageRecognition() {
       videoHeight,
     );
     const rightImageDataUrl = rightCanvas.toDataURL("image/jpeg");
-    let rightImageResponse = null;
     setRightImage(rightImageDataUrl); // show it on screen
-    await identifyPlant({ imageBase64: rightImageDataUrl }).then((r) => {
-      console.log("Right plant:", r);
-      rightImageResponse = r;
-    });
 
-    if (
-      leftImageResponse.result.is_plant.binary === false ||
-      rightImageResponse.result.is_plant.binary === false
-    ) {
-      setIsPlant(false);
-      return;
-    }
+    // Start loading
+    setLoading(true);
+    const msg =
+      funnyLoadingMessages[
+        Math.floor(Math.random() * funnyLoadingMessages.length)
+      ];
+    setLoadingMessage(msg);
 
-    navigate("/chat", {
-      state: {
-        leftImageResponse: leftImageResponse,
-        rightImageResponse: rightImageResponse,
-      },
-    });
+    // Sent to API
+    Promise.all([
+      identifyPlant({ imageBase64: leftImageDataUrl }),
+      identifyPlant({ imageBase64: rightImageDataUrl }),
+    ])
+      .then(([leftResponse, rightResponse]) => {
+        if (leftResponse.completed == null || rightResponse.completed == null) {
+          console.error("Erro na API");
+          navigate("/error");
+          return;
+        }
+
+        if (
+          leftResponse.result.is_plant.binary === false ||
+          rightResponse.result.is_plant.binary === false
+        ) {
+          setIsPlant(false);
+          return;
+        }
+
+        navigate("/chat", {
+          state: {
+            leftImageResponse: leftResponse,
+            rightImageResponse: rightResponse,
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Erro na API", error);
+        navigate("/error");
+      });
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen text-center">
+        <span className="text-2xl animate-pulse mb-4">{loadingMessage}</span>
+        <span className="text-green-600 text-sm">
+          Plantoversa está brotando... 🌱
+        </span>
+      </div>
+    );
   }
 
   return (
