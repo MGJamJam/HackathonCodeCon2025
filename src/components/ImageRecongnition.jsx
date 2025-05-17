@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import identifyPlant from "../utils/plantApi.js";
 import { useNavigate } from "react-router-dom";
+import { FaceError } from "./face-error/face-error.jsx";
 
 const funnyLoadingMessages = [
   "🌿 Conversando com as raízes...",
@@ -12,12 +13,14 @@ const funnyLoadingMessages = [
 
 export function ImageRecognition() {
   const videoRef = useRef(null);
-  const canvasRef = useRef(null); // hidden full frame capture canvas
+  const canvasRef = useRef(null);
 
   const [leftImage, setLeftImage] = useState(null);
   const [rightImage, setRightImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+
+  const [isPlant, setIsPlant] = useState(null);
 
   const navigate = useNavigate();
 
@@ -108,6 +111,14 @@ export function ImageRecognition() {
           return;
         }
 
+        if (
+          leftResponse.result.is_plant.binary === false ||
+          rightResponse.result.is_plant.binary === false
+        ) {
+          setIsPlant(false);
+          return;
+        }
+
         navigate("/chat", {
           state: {
             leftImageResponse: leftResponse,
@@ -134,11 +145,11 @@ export function ImageRecognition() {
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      {/* Hidden canvas to capture full frame */}
       <canvas ref={canvasRef} className="hidden" />
 
-      {/* Video display */}
       <div className="relative w-full max-w-3xl aspect-video mx-auto">
+        {isPlant === false && <FaceError />}
+
         <video
           ref={videoRef}
           autoPlay
@@ -148,7 +159,6 @@ export function ImageRecognition() {
         <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-white opacity-80 pointer-events-none" />
       </div>
 
-      {/* Button */}
       <button
         className="mt-4 px-6 py-3 bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition"
         onClick={takePhoto}
@@ -156,7 +166,6 @@ export function ImageRecognition() {
         Iniciar plantoversa
       </button>
 
-      {/* Previews */}
       {debug && (
         <div className="flex gap-6 mt-4">
           {leftImage && (

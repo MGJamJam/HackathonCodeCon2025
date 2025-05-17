@@ -50,5 +50,7 @@ Applicativo web em React + vite, puro frontend sem backend
 
 ## Como rodar:
 
+- Criar arquivo .env
+- Colocar a API key
 - `npm install`
 - `npm dev`
