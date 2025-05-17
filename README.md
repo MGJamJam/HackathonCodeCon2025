@@ -32,20 +32,11 @@ Nice to have:
 - interface do chat
 
 ## Arquitetura do sistema:
-Applicativo web em React + vite
+Applicativo web em React + vite, puro frontend sem backend
 - Acesso à webcam	Captura vídeo ao vivo das plantas: getUserMedia
-- Reconheciemnto de plantas 
-
-
-
-
-🧩 Componentes do Sistema (com techs sugeridas)
-Componente	O que faz	Como fazer com mínimo esforço
-1. Acesso à webcam	Captura vídeo ao vivo das plantas	HTML + JS: getUserMedia
-2. Reconhecimento de plantas	Detecta qual planta está na frente da câmera	Usar API pronta de reconhecimento de plantas via imagem, tipo: Plant.id API (ou simular com imagem dummy e hardcoded output para MVP)
-3. Geração de linguagem própria	Cria “língua das plantas”	Geração aleatória de símbolos ou textos tipo “klorbx wzzzzz nnnah” — simples com JS/Python
-4. Personalidade da planta	Define estilo de fala, tom, frequência	Predefinição por planta: ex. Cacto é rude, Girassol é alegre etc.
-5. Regras de comunicação	Impede que plantas "incompatíveis" conversem	Dicionário com compatibilidades (ex: "Orquídea odeia Samambaia")
-6. Interface do chat	Mostra conversa entre as plantas	React com chat fake estilo WhatsApp/Slack
-7. Vozes das plantas	Texto-para-fala das mensagens	Web Speech API – speechSynthesis no navegador
-8. Modo Empresa	Bloqueia plantas que não estão em empresa registrada	Fake check com campo de CNPJ e validação simples tipo RegEx
+- Reconheciemnto de plantas com plant.id API https://documenter.getpostman.com/view/24599534/2s93z5A4v2#d1329bea-e15b-422b-8b5f-628b605e5bba
+- Gerador de linguagem prõpria (Javascript)
+(- personalidade da planta, define estilo de fala (cursive, CAPS, palavrão, ...), frequência - predefinição por tipo de planta (cactus é rude, ...) - talvez usar IA) nice to have
+(- Regras de comunicação	Impede que plantas "incompatíveis" conversem: Dicionário com compatibilidades (ex: "Orquídea odeia Samambaia"))
+- Interface do chat (lib ?, js + tailwind?)
+(- Vozes das plantas - Web Speech API – speechSynthesis / ou modelo de IA pra poder mudar as vozes) nice to have
