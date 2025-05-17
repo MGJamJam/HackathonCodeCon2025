@@ -25,7 +25,7 @@ export function ImageRecognition() {
       // Converter para base64
       const imageDataUrl = canvas.toDataURL("image/jpeg");
 
-      identifyPlant({imageBase64: imageDataUrl}).then(r => console.log(r))
+      identifyPlant({ imageBase64: imageDataUrl }).then((r) => console.log(r));
     }
   }
 
@@ -38,7 +38,9 @@ export function ImageRecognition() {
         playsInline
         className="w-64 h-64 object-cover rounded"
       />
-      <button class="mt-10" onClick={takePhoto}>Iniciar plantoversa</button>
+      <button class="mt-10" onClick={takePhoto}>
+        Iniciar plantoversa
+      </button>
     </div>
   );
 }
