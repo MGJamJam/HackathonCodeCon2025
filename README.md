@@ -32,3 +32,20 @@ Nice to have:
 - interface do chat
 
 ## Arquitetura do sistema:
+Applicativo web em React + vite
+- Acesso à webcam	Captura vídeo ao vivo das plantas: getUserMedia
+- Reconheciemnto de plantas 
+
+
+
+
+🧩 Componentes do Sistema (com techs sugeridas)
+Componente	O que faz	Como fazer com mínimo esforço
+1. Acesso à webcam	Captura vídeo ao vivo das plantas	HTML + JS: getUserMedia
+2. Reconhecimento de plantas	Detecta qual planta está na frente da câmera	Usar API pronta de reconhecimento de plantas via imagem, tipo: Plant.id API (ou simular com imagem dummy e hardcoded output para MVP)
+3. Geração de linguagem própria	Cria “língua das plantas”	Geração aleatória de símbolos ou textos tipo “klorbx wzzzzz nnnah” — simples com JS/Python
+4. Personalidade da planta	Define estilo de fala, tom, frequência	Predefinição por planta: ex. Cacto é rude, Girassol é alegre etc.
+5. Regras de comunicação	Impede que plantas "incompatíveis" conversem	Dicionário com compatibilidades (ex: "Orquídea odeia Samambaia")
+6. Interface do chat	Mostra conversa entre as plantas	React com chat fake estilo WhatsApp/Slack
+7. Vozes das plantas	Texto-para-fala das mensagens	Web Speech API – speechSynthesis no navegador
+8. Modo Empresa	Bloqueia plantas que não estão em empresa registrada	Fake check com campo de CNPJ e validação simples tipo RegEx
