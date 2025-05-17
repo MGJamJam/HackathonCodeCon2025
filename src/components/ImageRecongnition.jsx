@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import identifyPlant from "../utils/plantApi.js";
+import { useNavigate } from "react-router-dom";
 
 export function ImageRecognition() {
   const videoRef = useRef(null);
@@ -7,6 +8,8 @@ export function ImageRecognition() {
 
   const [leftImage, setLeftImage] = useState(null);
   const [rightImage, setRightImage] = useState(null);
+
+  const navigate = useNavigate();
 
   const debug = false;
 
@@ -18,7 +21,7 @@ export function ImageRecognition() {
     });
   }, []);
 
-  function takePhoto() {
+  async function takePhoto() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
@@ -41,6 +44,7 @@ export function ImageRecognition() {
     const leftCanvas = document.createElement("canvas");
     leftCanvas.width = halfWidth;
     leftCanvas.height = videoHeight;
+    let leftImageResponse = null;
     const leftCtx = leftCanvas.getContext("2d");
     leftCtx.drawImage(
       canvas,
@@ -55,9 +59,10 @@ export function ImageRecognition() {
     );
     const leftImageDataUrl = leftCanvas.toDataURL("image/jpeg");
     setLeftImage(leftImageDataUrl); // show it on screen
-    identifyPlant({ imageBase64: leftImageDataUrl }).then((r) =>
-      console.log("Left plant:", r),
-    );
+    await identifyPlant({ imageBase64: leftImageDataUrl }).then((r) => {
+      console.log("Left plant:", r);
+      leftImageResponse = r;
+    });
 
     // RIGHT IMAGE
     const rightCanvas = document.createElement("canvas");
@@ -76,10 +81,19 @@ export function ImageRecognition() {
       videoHeight,
     );
     const rightImageDataUrl = rightCanvas.toDataURL("image/jpeg");
+    let rightImageResponse = null;
     setRightImage(rightImageDataUrl); // show it on screen
-    identifyPlant({ imageBase64: rightImageDataUrl }).then((r) =>
-      console.log("Right plant:", r),
-    );
+    await identifyPlant({ imageBase64: rightImageDataUrl }).then((r) => {
+      console.log("Right plant:", r);
+      rightImageResponse = r;
+    });
+
+    navigate("/chat", {
+      state: {
+        leftImageResponse: leftImageResponse,
+        rightImageResponse: rightImageResponse,
+      },
+    });
   }
 
   return (

@@ -1,28 +1,32 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: 'Olá! Como posso te ajudar hoje?' }
+    { sender: "bot", text: "Olá! Como posso te ajudar hoje?" },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
+
+  const location = useLocation();
+  const { leftImageResponse, rightImageResponse } = location.state || {};
 
   const handleSend = () => {
     if (!input.trim()) return;
 
-    const userMessage = { sender: 'user', text: input };
+    const userMessage = { sender: "user", text: input };
     setMessages([...messages, userMessage]);
 
     setTimeout(() => {
-      const botMessage = { sender: 'bot', text: 'Entendi! Me fale mais.' };
-      setMessages(prev => [...prev, botMessage]);
+      const botMessage = { sender: "bot", text: "Entendi! Me fale mais." };
+      setMessages((prev) => [...prev, botMessage]);
     }, 1000);
 
-    setInput('');
+    setInput("");
   };
 
   const avatar = {
-    bot: '🪴',
-    user: '🌻'
+    firstPlant: leftImageResponse.input.images[0] || "🪴",
+    secondPlant: rightImageResponse.input.images[0] || "🌻",
     // URL: ex. "https://example.com/avatar.png"
   };
 
@@ -32,20 +36,26 @@ export default function Chatbot() {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex items-start ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex items-start ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
           >
-            {msg.sender === 'bot' && (
-              <div className="w-8 h-8 mr-2 text-2xl">{avatar.bot}</div>
+            {msg.sender === "bot" && (
+              <div className="w-8 h-8 mr-2 text-2xl">
+                <img src={avatar.firstPlant} />
+              </div>
             )}
             <div
               className={`p-3 rounded-lg max-w-md ${
-                msg.sender === 'bot' ? 'bg-green-500 self-start' : 'bg-green-300'
+                msg.sender === "bot"
+                  ? "bg-green-500 self-start"
+                  : "bg-green-300"
               }`}
             >
               {msg.text}
             </div>
-            {msg.sender === 'user' && (
-              <div className="w-8 h-8 ml-2 text-2xl">{avatar.user}</div>
+            {msg.sender === "user" && (
+              <div className="w-8 h-8 ml-2 text-2xl">
+                <img src={avatar.secondPlant} />
+              </div>
             )}
           </div>
         ))}
@@ -57,8 +67,8 @@ export default function Chatbot() {
           type="text"
           placeholder="Digite sua mensagem..."
           value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSend()}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <button
           className="bg-blue-500 text-white px-4 rounded-r-lg hover:bg-blue-600"
@@ -70,4 +80,3 @@ export default function Chatbot() {
     </div>
   );
 }
-
