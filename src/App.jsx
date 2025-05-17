@@ -3,16 +3,20 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
-function App() {
+import Chatbot from './components/chatbot-interface/ChatbotInterface.jsx';
+
+export default function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
-      <h1 class="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      <header>
+        <h1 className="text-3xl my-8">
+          Plant Talk
+        </h1>
+      </header>
+
+      <Chatbot />
     </>
   );
 }
-
-export default App;
