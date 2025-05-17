@@ -1,7 +1,18 @@
 # HackathonCodeCon2025
 
+## Nome do time: 
+
+## Integrantes:
+- Myriam Gantner
+- Monica Hillman
+- Diana Saramago
+- Ana Luiza Dias da Rocha
+- Maria Eduarda Gomes e Silva
+
+## Nome: PlantTalk
+
 ## Objetivo:
-Criar um sistema eficaz de communicaoção entre plantas.
+Criar um sistema eficaz de communicação entre plantas.
 
 ## Descrição:
 Duas plantas são colocadas em frente da camera pra ser reconhecido pelo sistema. Assim que forem reconhecidos, um chat abre em que as plantas vão conversando entre si, mandando mensagens na linguagem delas. 
