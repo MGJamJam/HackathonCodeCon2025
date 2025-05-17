@@ -1,11 +1,9 @@
-const identifyPlant = ({ imageBase64, latitude, longitude }) => {
+const identifyPlant = ({ imageBase64 }) => {
     const apiUrl = 'https://plant.id/api/v3/identification';
     const apiKey = import.meta.env.VITE_API_KEY;
   
     const plantData = {
       images: [imageBase64],
-      latitude,
-      longitude,
       similar_images: true
     };
   
