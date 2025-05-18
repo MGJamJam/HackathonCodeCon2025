@@ -64,5 +64,6 @@ export async function askAssistant(prompt, threadId, apiKey) {
   const messagesData = await messagesRes.json();
   const assistantMessages = messagesData.data.filter((m) => m.role === 'assistant');
 
-  return assistantMessages.map((m) => m.content[0]?.text?.value || '').join('\n');
+  console.log(assistantMessages)
+  return assistantMessages[0].content[0]?.text?.value
 }
