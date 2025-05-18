@@ -1,8 +1,14 @@
-# HackathonCodeCon2025
+# 🌱 PlantTalk
+**Hackathon CodeCon 2025**
 
-## Nome do time:
+---
 
-## Integrantes:
+## 🧑‍🌾 Nome do time
+**Jardineiras de Bits**
+
+---
+
+## 👩‍💻 Integrantes
 
 - Myriam Gantner
 - Monica Hillman
@@ -10,47 +16,64 @@
 - Ana Luiza Dias da Rocha
 - Maria Eduarda Gomes e Silva
 
-## Nome: PlantTalk
+---
 
-## Objetivo:
+## 🪴 Sobre o Projeto
 
-Criar um sistema eficaz de communicação entre plantas.
+**PlantTalk** é um sistema de comunicação entre plantas com tradução para o português.  
+Posicione duas plantas diante da câmera, o sistema:
 
-## Descrição:
+1. Reconhece as espécies
+2. Capta a “conversa” entre elas em linguagem vegetal
+3. Permite traduzir as falas para o português via OpenAI
 
-Duas plantas são colocadas em frente da camera pra ser reconhecido pelo sistema. Assim que forem reconhecidos, um chat abre em que as plantas vão conversando entre si, mandando mensagens na linguagem delas.
+Tudo de forma puramente frontend, divertida e “inútil” — ideal para o Hackathon!
 
-Nice to have:
+---
 
-- cada tipo de planta tem uma linguagem propria
-- alguns tipos de plantas não falam entre si -> tela de erro de communicação
-- cada planta tem uma personalidade
-- modo empresa: restringir a communciao somente entre plantas que estao na localozcao de empresa (CNPJ registrado)
-- traducao das conversas das plantas
+## 🧩 Componentes do Sistema
 
-## Componentes do sistema:
+1. **Acesso à webcam**
+  - Captura vídeo ao vivo das plantas (`getUserMedia`)
+2. **Reconhecimento de plantas**
+  - Plant.id API ([Documentação](https://documenter.getpostman.com/view/24599534/2s93z5A4v2#d1329bea-e15b-422b-8b5f-628b605e5bba))
+3. **Divisão de imagem**
+  - Divide o frame em duas metades (cada planta)
+4. **Geração de “linguagem vegetal”**
+  - Função JS que monta strings aleatórias por tipo de planta
+5. **Interface de chat**
+  - React + Vite + TailwindCSS
+6. **Voz das plantas**
+  - Web Speech API (`speechSynthesis`)
+7. **Tradução para português**
+  - OpenAI API para traduzir mensagens vegetais
 
-- componente acesso a webcam
-- componente de reconhecimento de planta
-- componete de geração aleatoria de caracteres
-- componente leitura de palavras no navegador (vozes das plantas)
-- interface do chat
+---
 
-## Arquitetura do sistema:
+## 🏗️ Arquitetura
 
-Applicativo web em React + vite, puro frontend sem backend
+- **Frontend**: React + Vite (SPA)
+- **Estilização**: TailwindCSS
+- **Roteamento**: React Router (páginas: `/` → captura; `/chat` → bate-papo; `/erro` → falha)
+- **APIs externas**:
+  - Plant.id (reconhecimento de plantas)
+  - OpenAI (tradução)
 
-- Acesso à webcam Captura vídeo ao vivo das plantas: getUserMedia
-- Reconheciemnto de plantas com plant.id API https://documenter.getpostman.com/view/24599534/2s93z5A4v2#d1329bea-e15b-422b-8b5f-628b605e5bba
-- Gerador de linguagem prõpria (Javascript)
-  (- personalidade da planta, define estilo de fala (cursive, CAPS, palavrão, ...), frequência - predefinição por tipo de planta (cactus é rude, ...) - talvez usar IA) nice to have
-  (- Regras de comunicação Impede que plantas "incompatíveis" conversem: Dicionário com compatibilidades (ex: "Orquídea odeia Samambaia"))
-- Interface do chat (lib ?, js + tailwind?)
-  (- Vozes das plantas - Web Speech API – speechSynthesis / ou modelo de IA pra poder mudar as vozes) nice to have
+## ⚙️ Como Rodar Localmente
 
-## Como rodar:
+1. Clone este repositório: `git clone https://github.com/MGJamJam/HackathonCodeCon2025.git`
 
-- Criar arquivo .env
-- Colocar a API key
-- `npm install`
-- `npm dev`
+2. Crie um arquivo .env na raiz com as chaves:
+   - `VITE_PLANT_ID_API_KEY=SEU_PLANT_ID_API_KEY`
+   - `VITE_OPENAI_API_KEY=SEU_OPENAI_API_KEY`
+
+3. Instale dependências: `npm install`
+
+
+4. Inicie o servidor de desenvolvimento: `npm run dev`
+ 
+5. Abra no navegador: `http://localhost:5173`
+
+## Utils
+- rodar os tests: `npm run test`
+- formatar: `npm run format`
