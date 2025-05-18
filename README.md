@@ -1,7 +1,7 @@
 # 🌱 PlantTalk
 **Hackathon CodeCon 2025**
 
---
+---
 
 # Deploy
 
@@ -9,7 +9,7 @@
 
 **Via Vercel**: https://planttalk-two.vercel.app
 
---
+---
 
 # Ferramenta de organização da equipe
 
