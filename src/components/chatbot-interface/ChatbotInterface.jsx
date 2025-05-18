@@ -9,6 +9,9 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([
     { sender: "bot", text: randomPhrase() },
   ]);
+  const [originalMessages, setOriginalMessages] = useState([]);
+  const [isReady, setIsReady] = useState(false);
+  const [translatingIndex, setTranslatingIndex] = useState(null);
 
   const location = useLocation();
   const { leftImageResponse, rightImageResponse } = location.state || {};
@@ -23,10 +26,10 @@ export default function Chatbot() {
   async function callOpenAi() {
     const ASSISTANT_ID = "asst_FB9K589h5aXzuS6XjbOA1vCi";
 
+    // Cria a thread
     const threadRes = await fetch("https://api.openai.com/v1/threads", {
       method: "POST",
       headers: {
-        assistant_id: ASSISTANT_ID,
         Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
         "OpenAI-Beta": "assistants=v2",
@@ -34,31 +37,45 @@ export default function Chatbot() {
     });
 
     const threadData = await threadRes.json();
+    const threadId = threadData.id;
 
-    await sendPrompt(threadData.id);
-  }
+    // Itera sobre as mensagens
+    for (let i = 0; i < messages.length; i++) {
+      const current = messages[i];
 
-  async function sendPrompt(threadId) {
-    if (!threadId) {
-      alert("Crie a thread primeiro clicando em 'Traduza!!!'");
-      return;
+      // Marca como traduzindo
+      setTranslatingIndex(i);
+
+      // Mostra "..." temporariamente na mensagem
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[i] = { ...current, text: "..." };
+        return updated;
+      });
+
+      const prompt = `
+NomePlantaRemetente: ${current.sender === "user" ? "Planta A" : "Planta B"}
+NomePlantaDestinatário: ${current.sender === "user" ? "Planta B" : "Planta A"}
+TomDeHumorRemetente: Fofoqueira
+Recebida: "${current.text}"
+Responda com no máximo 10 palavras.
+      `;
+
+      const resposta = await askAssistant(prompt, threadId, OPENAI_API_KEY);
+
+      // Substitui pela resposta real
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[i] = {
+          sender: current.sender,
+          text: resposta,
+        };
+        return updated;
+      });
+
+      setTranslatingIndex(null);
+      await new Promise((res) => setTimeout(res, 500));
     }
-
-    const prompt = `
-    NomePlantaRemetente: Planta A
-    NomePlantaDestinatário: Planta B
-    TomDeHumorRemetente: Fofoqueira
-    Recebida: "${messages[messages.length - 1].text}"
-  `;
-
-    const resposta = await askAssistant(prompt, threadId, OPENAI_API_KEY);
-
-    const botMessage = {
-      sender: "bot",
-      text: resposta,
-    };
-
-    setMessages((prev) => [...prev, botMessage]);
   }
 
   useEffect(() => {
@@ -66,8 +83,9 @@ export default function Chatbot() {
     let sender = "user";
 
     const interval = setInterval(() => {
-      if (count >= 10) {
+      if (count >= 6) {
         clearInterval(interval);
+        setIsReady(true);
         return;
       }
 
@@ -77,6 +95,8 @@ export default function Chatbot() {
       };
 
       setMessages((prev) => [...prev, newMessage]);
+      setOriginalMessages((prev) => [...prev, newMessage]);
+
       sender = sender === "user" ? "bot" : "user";
       count++;
     }, 2000);
@@ -84,9 +104,8 @@ export default function Chatbot() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fala apenas a última mensagem, quando ela muda
   useEffect(() => {
-    if (messages.length > 1) {
+    if (messages.length > 1 && translatingIndex === null) {
       const last = messages[messages.length - 1];
       speak(last.text);
     }
@@ -112,9 +131,9 @@ export default function Chatbot() {
                   : "bg-green-300"
               }`}
             >
-              {msg.text} {getRandomPlantEmoji()}
+              {translatingIndex === idx ? "... " : msg.text}{" "}
+              {getRandomPlantEmoji()}
             </div>
-
             {msg.sender === "user" && (
               <div className="w-8 h-8 ml-2 text-2xl">
                 <img src={avatar.secondPlant} />
@@ -123,7 +142,13 @@ export default function Chatbot() {
           </div>
         ))}
       </div>
-      <button onClick={() => callOpenAi()}>Traduza!!!</button>
+      <button
+        onClick={callOpenAi}
+        disabled={!isReady}
+        className="bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800 transition"
+      >
+        Traduza!!!
+      </button>
     </div>
   );
 }
