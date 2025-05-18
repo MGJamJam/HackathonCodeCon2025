@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { randomPhrase } from "../utils/randomPhrase.js";
-import speak from "../utils/textToSpeech.js";
+import speak from "../utils/speak.js";
 import getRandomPlantEmoji from "../utils/getPlantEmoji.js";
 import { askAssistant } from "../utils/askAssistant.js";
 
@@ -57,10 +57,14 @@ export default function Chatbot() {
     const threadData = await threadRes.json();
     const threadId = threadData.id;
 
-    for (let i = 0; i < messages.length; i++) {
-      const current = messages[i];
+    // 🔒 Trava a lista de mensagens no momento do clique
+    const messagesToTranslate = [...messages];
+
+    for (let i = 0; i < messagesToTranslate.length; i++) {
+      const current = messagesToTranslate[i];
       setTranslatingIndex(i);
 
+      // Atualiza visualmente com "..."
       setMessages((prev) => {
         const updated = [...prev];
         updated[i] = { ...current, text: "..." };
@@ -125,7 +129,8 @@ export default function Chatbot() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem] min-w-100 max-h-150">
-      <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2 scroll-ml-1>  
+      <div
+        className="chatbot-content flex-1 overflow-auto mb-4 space-y-2 scroll-ml-1>  
         [&::-webkit-scrollbar]:w-1
         [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-track]:bg-green-600
@@ -142,8 +147,8 @@ export default function Chatbot() {
             {msg.sender === "bot" && (
               <div className="mr-2 text-2xl">
                 <img
-                  className="w-10 h-10 rounded-full"                                                                                                                                                                                             
-                  src={avatar.firstPlant} 
+                  className="w-10 h-10 rounded-full"
+                  src={avatar.firstPlant}
                 />
               </div>
             )}
@@ -161,8 +166,8 @@ export default function Chatbot() {
             {msg.sender === "user" && (
               <div className="ml-2 text-2xl">
                 <img
-                  className="w-10 h-10 rounded-full"     
-                  src={avatar.secondPlant} 
+                  className="w-10 h-10 rounded-full"
+                  src={avatar.secondPlant}
                 />
               </div>
             )}
