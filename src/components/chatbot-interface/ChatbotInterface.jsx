@@ -113,7 +113,15 @@ Responda com no máximo 10 palavras.
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem] min-w-100 max-h-150">
-      <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2">
+      <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2 scroll-ml-1>  
+        [&::-webkit-scrollbar]:w-1
+        [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-track]:bg-green-600
+        [&::webkit-scrollbar-thumb]:rounded-full
+        [&::-webkit-scrollbar-thumb]:bg-green-600
+        dark:[&::-webkit-scrollbar-track]:bg-green-600
+        dark:[&::-webkit-scrollbar-thumb]:bg-green-600"
+      >
         {messages.map((msg, idx) => (
           <div
             key={idx}
