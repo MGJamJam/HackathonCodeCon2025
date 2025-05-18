@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import identifyPlant from "../utils/plantApi.js";
 import { useNavigate } from "react-router-dom";
-import { FaceError } from "./face-error/face-error.jsx";
+import { FaceError } from "./FaceError.jsx";
 
 const funnyLoadingMessages = [
   "🌿 Conversando com as raízes...",

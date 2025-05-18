@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { randomPhrase } from "../../utils/randomPhrase";
-import speak from "../../utils/textToSpeech";
-import getRandomPlantEmoji from "../../utils/getPlantEmoji";
-import { askAssistant } from "../../utils/askAssistant";
+import { randomPhrase } from "../utils/randomPhrase";
+import speak from "../utils/speak";
+import getRandomPlantEmoji from "../utils/getPlantEmoji";
+import { askAssistant } from "../utils/askAssistant";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);

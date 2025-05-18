@@ -1,9 +1,9 @@
 import "./App.css";
 import { ImageRecognition } from "./components/ImageRecongnition.jsx";
 
-import Chatbot from "./components/chatbot-interface/ChatbotInterface.jsx";
+import Chatbot from "./components/ChatbotInterface.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ErrorPage } from "./components/ErrorPage.js";
+import { ErrorPage } from "./components/ErrorPage.jsx";
 
 export default function App() {
   return (
