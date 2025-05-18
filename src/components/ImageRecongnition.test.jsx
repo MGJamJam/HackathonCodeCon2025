@@ -4,7 +4,6 @@ import { render, screen } from "@testing-library/react";
 import { ImageRecognition } from "./ImageRecongnition";
 import { MemoryRouter } from "react-router-dom";
 
-// Mock: não queremos que use a webcam real
 vi.stubGlobal("navigator", {
   mediaDevices: {
     getUserMedia: vi.fn(() =>
@@ -15,7 +14,6 @@ vi.stubGlobal("navigator", {
   },
 });
 
-// Mock da função de navegação
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {

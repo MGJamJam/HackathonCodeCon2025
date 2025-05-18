@@ -15,11 +15,11 @@ describe('askAssistant', () => {
   })
 
   it('deve enviar a mensagem, criar a run, aguardar execução e retornar a resposta do assistant', async () => {
-    // 1. POST da mensagem
+    
     mockFetch
       .mockResolvedValueOnce({ ok: true, json: async () => ({}) })
 
-      // 2. POST da run
+    
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -28,13 +28,13 @@ describe('askAssistant', () => {
         }),
       })
 
-      // 3. polling de status
+    
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ status: 'completed' }),
       })
 
-      // 4. GET das mensagens
+      
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -54,7 +54,6 @@ describe('askAssistant', () => {
     expect(resposta).toBe('Resposta gerada pelo Assistant')
     expect(fetch).toHaveBeenCalledTimes(4)
 
-    // Confirma o envio da mensagem
     expect(fetch).toHaveBeenCalledWith(
       `https://api.openai.com/v1/threads/${threadId}/messages`,
       expect.objectContaining({
