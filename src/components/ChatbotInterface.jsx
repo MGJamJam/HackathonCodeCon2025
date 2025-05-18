@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { randomPhrase } from "../../utils/randomPhrase";
-import speak from "../../utils/textToSpeech";
-import getRandomPlantEmoji from "../../utils/getPlantEmoji";
-import { askAssistant } from "../../utils/openAiApi";
+import { randomPhrase } from "../utils/randomPhrase.js";
+import speak from "../utils/textToSpeech.js";
+import getRandomPlantEmoji from "../utils/getPlantEmoji.js";
+import { askAssistant } from "../utils/askAssistant.js";
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: randomPhrase() },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [originalMessages, setOriginalMessages] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const [translatingIndex, setTranslatingIndex] = useState(null);
@@ -21,12 +19,32 @@ export default function Chatbot() {
     secondPlant: rightImageResponse?.input?.images?.[0] || "🌻",
   };
 
+  const plantNameA =
+    leftImageResponse?.classification?.suggestions?.[0]?.name || "Planta A";
+  const plantNameB =
+    rightImageResponse?.classification?.suggestions?.[0]?.name || "Planta B";
+
   const OPENAI_API_KEY = import.meta.env.VITE_OPENAPI_KEY;
 
-  async function callOpenAi() {
-    const ASSISTANT_ID = "asst_FB9K589h5aXzuS6XjbOA1vCi";
+  const humorTones = [
+    "fofoqueira",
+    "ácida",
+    "simpática",
+    "dramática",
+    "irônica",
+    "alegre",
+    "ranzinza",
+  ];
 
-    // Cria a thread
+  const getRandomTone = () => {
+    const index = Math.floor(Math.random() * humorTones.length);
+    return humorTones[index];
+  };
+
+  const [toneA] = useState(getRandomTone());
+  const [toneB] = useState(getRandomTone());
+
+  async function callOpenAi() {
     const threadRes = await fetch("https://api.openai.com/v1/threads", {
       method: "POST",
       headers: {
@@ -39,14 +57,10 @@ export default function Chatbot() {
     const threadData = await threadRes.json();
     const threadId = threadData.id;
 
-    // Itera sobre as mensagens
     for (let i = 0; i < messages.length; i++) {
       const current = messages[i];
-
-      // Marca como traduzindo
       setTranslatingIndex(i);
 
-      // Mostra "..." temporariamente na mensagem
       setMessages((prev) => {
         const updated = [...prev];
         updated[i] = { ...current, text: "..." };
@@ -54,16 +68,14 @@ export default function Chatbot() {
       });
 
       const prompt = `
-NomePlantaRemetente: ${current.sender === "user" ? "Planta A" : "Planta B"}
-NomePlantaDestinatário: ${current.sender === "user" ? "Planta B" : "Planta A"}
-TomDeHumorRemetente: Fofoqueira
-Recebida: "${current.text}"
-Responda com no máximo 10 palavras.
+      NomePlantaRemetente: ${current.sender === "user" ? plantNameA : plantNameB}
+      NomePlantaDestinatario: ${current.sender === "user" ? plantNameB : plantNameA}
+      TomDeHumorRemetente: ${current.sender === "user" ? toneA : toneB}
+      Recebida: "${current.text}"
       `;
 
       const resposta = await askAssistant(prompt, threadId, OPENAI_API_KEY);
 
-      // Substitui pela resposta real
       setMessages((prev) => {
         const updated = [...prev];
         updated[i] = {
@@ -80,7 +92,7 @@ Responda com no máximo 10 palavras.
 
   useEffect(() => {
     let count = 0;
-    let sender = "user";
+    let sender = "bot";
 
     const interval = setInterval(() => {
       if (count >= 6) {
@@ -142,8 +154,9 @@ Responda com no máximo 10 palavras.
                   : "bg-green-300"
               }`}
             >
-              {translatingIndex === idx ? "... " : msg.text}{" "}
-              {getRandomPlantEmoji()}
+              {translatingIndex === idx
+                ? "... "
+                : `${msg.text} ${getRandomPlantEmoji()}`}
             </div>
             {msg.sender === "user" && (
               <div className="ml-2 text-2xl">
