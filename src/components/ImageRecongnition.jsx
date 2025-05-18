@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import identifyPlant from "../utils/plantApi.js";
 import { useNavigate } from "react-router-dom";
-import { FaceError } from "./face-error/face-error.jsx";
+// import { FaceError } from "./face-error/face-error.jsx";
 
 const funnyLoadingMessages = [
   "🌿 Conversando com as raízes...",
@@ -111,14 +111,14 @@ export function ImageRecognition() {
           return;
         }
 
-        if (
-          leftResponse.result.is_plant.binary === false ||
-          rightResponse.result.is_plant.binary === false
-        ) {
-          setIsPlant(false);
-          setLoading(false);
-          return;
-        }
+        // if (
+        //   leftResponse.result.is_plant.binary === false ||
+        //   rightResponse.result.is_plant.binary === false
+        // ) {
+        //   setIsPlant(false);
+        //   setLoading(false);
+        //   return;
+        // }
 
         navigate("/chat", {
           state: {
@@ -149,7 +149,7 @@ export function ImageRecognition() {
       <canvas ref={canvasRef} className="hidden" />
 
       <div className="relative w-full max-w-3xl aspect-video mx-auto">
-        {isPlant === false && <FaceError />}
+        {/* {isPlant === false && <FaceError />} */}
 
         <video
           ref={videoRef}

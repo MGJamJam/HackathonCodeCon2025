@@ -117,11 +117,14 @@ Responda com no máximo 10 palavras.
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex items-start ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex items-start align-center ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
           >
             {msg.sender === "bot" && (
-              <div className="w-8 h-8 mr-2 text-2xl">
-                <img src={avatar.firstPlant} />
+              <div className="mr-2 text-2xl">
+                <img
+                  className="w-10 h-10 rounded-full"                                                                                                                                                                                             
+                  src={avatar.firstPlant} 
+                />
               </div>
             )}
             <div
@@ -135,19 +138,26 @@ Responda com no máximo 10 palavras.
               {getRandomPlantEmoji()}
             </div>
             {msg.sender === "user" && (
-              <div className="w-8 h-8 ml-2 text-2xl">
-                <img src={avatar.secondPlant} />
+              <div className="ml-2 text-2xl">
+                <img
+                  className="w-10 h-10 rounded-full"     
+                  src={avatar.secondPlant} 
+                />
               </div>
             )}
           </div>
         ))}
       </div>
+      <p className="mt-1 mb-3">
+        Quero saber o que as plantas estão conversando
+      </p>
+
       <button
+        className="!border-1 !border-solid !border-green-900 hover:!bg-green-200"
         onClick={callOpenAi}
         disabled={!isReady}
-        className="bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800 transition"
       >
-        Traduza!!!
+        Traduzir plantes para português
       </button>
     </div>
   );
