@@ -1,6 +1,19 @@
 # 🌱 PlantTalk
 **Hackathon CodeCon 2025**
 
+--
+
+# Deploy
+
+**Via Magalu Cloud**: https://planttalk.minetest.land
+**Via Vercel**: https://planttalk-two.vercel.app
+
+--
+
+# Ferramenta de organização da equipe
+
+**Trello - Kanban**: https://trello.com/invite/b/6828a0fcd1782d1f53350747/ATTI635ee413c6bb4b6b4990d7657bd645faE1D98E80/hackathon-codecon-2025-🌱
+
 ---
 
 ## 🧑‍🌾 Nome do time
