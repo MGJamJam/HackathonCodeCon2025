@@ -6,6 +6,7 @@
 # Deploy
 
 **Via Magalu Cloud**: https://planttalk.minetest.land
+
 **Via Vercel**: https://planttalk-two.vercel.app
 
 --
