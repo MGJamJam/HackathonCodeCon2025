@@ -41,14 +41,12 @@ export function ImageRecognition() {
 
     const ctx = canvas.getContext("2d");
 
-    // Use actual video stream resolution!
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
 
     canvas.width = videoWidth;
     canvas.height = videoHeight;
 
-    // Draw the current video frame onto the canvas
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
 
     const halfWidth = videoWidth / 2;
@@ -70,9 +68,8 @@ export function ImageRecognition() {
       videoHeight,
     );
     const leftImageDataUrl = leftCanvas.toDataURL("image/jpeg");
-    setLeftImage(leftImageDataUrl); // show it on screen
+    setLeftImage(leftImageDataUrl);
 
-    // RIGHT IMAGE
     const rightCanvas = document.createElement("canvas");
     rightCanvas.width = halfWidth;
     rightCanvas.height = videoHeight;
@@ -91,7 +88,6 @@ export function ImageRecognition() {
     const rightImageDataUrl = rightCanvas.toDataURL("image/jpeg");
     setRightImage(rightImageDataUrl); // show it on screen
 
-    // Start loading
     setLoading(true);
     const msg =
       funnyLoadingMessages[
@@ -149,7 +145,7 @@ export function ImageRecognition() {
       <canvas ref={canvasRef} className="hidden" />
 
       <div className="relative w-full max-w-3xl aspect-video mx-auto">
-        {isPlant === false && <FaceError />}
+        {/* {isPlant === false && <FaceError />} */}
 
         <video
           ref={videoRef}

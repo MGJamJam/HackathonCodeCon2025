@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { randomPhrase } from "../utils/randomPhrase";
-import speak from "../utils/speak";
-import getRandomPlantEmoji from "../utils/getPlantEmoji";
-import { askAssistant } from "../utils/askAssistant";
+import { randomPhrase } from "../utils/randomPhrase.js";
+import speak from "../utils/textToSpeech.js";
+import getRandomPlantEmoji from "../utils/getPlantEmoji.js";
+import { askAssistant } from "../utils/askAssistant.js";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -125,15 +125,26 @@ export default function Chatbot() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4 border-2 border-green-900 rounded-[1.6rem] min-w-100 max-h-150">
-      <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2">
+      <div className="chatbot-content flex-1 overflow-auto mb-4 space-y-2 scroll-ml-1>  
+        [&::-webkit-scrollbar]:w-1
+        [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-track]:bg-green-600
+        [&::webkit-scrollbar-thumb]:rounded-full
+        [&::-webkit-scrollbar-thumb]:bg-green-600
+        dark:[&::-webkit-scrollbar-track]:bg-green-600
+        dark:[&::-webkit-scrollbar-thumb]:bg-green-600"
+      >
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex items-start ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex items-start align-center ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
           >
             {msg.sender === "bot" && (
-              <div className="w-8 h-8 mr-2 text-2xl">
-                <img src={avatar.firstPlant} />
+              <div className="mr-2 text-2xl">
+                <img
+                  className="w-10 h-10 rounded-full"                                                                                                                                                                                             
+                  src={avatar.firstPlant} 
+                />
               </div>
             )}
             <div
@@ -148,19 +159,26 @@ export default function Chatbot() {
                 : `${msg.text} ${getRandomPlantEmoji()}`}
             </div>
             {msg.sender === "user" && (
-              <div className="w-8 h-8 ml-2 text-2xl">
-                <img src={avatar.secondPlant} />
+              <div className="ml-2 text-2xl">
+                <img
+                  className="w-10 h-10 rounded-full"     
+                  src={avatar.secondPlant} 
+                />
               </div>
             )}
           </div>
         ))}
       </div>
+      <p className="mt-1 mb-3">
+        Quero saber o que as plantas estão conversando
+      </p>
+
       <button
+        className="!border-1 !border-solid !border-green-900 hover:!bg-green-200"
         onClick={callOpenAi}
         disabled={!isReady}
-        className="bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800 transition"
       >
-        Traduza!!!
+        Traduzir plantes para português
       </button>
     </div>
   );
